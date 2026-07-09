@@ -1,6 +1,6 @@
 title: Jacob Salomonsen
 description: >-
-  Jacob Salomonsen's portfolio — software engineer building ML-powered
+  Jacob Salomonsen's portfolio — machine learning engineer building ML-powered
   applications, from computer vision on the edge to full-stack cloud platforms.
 url: "https://jiekebo.github.io"
 baseurl: ""
@@ -40,9 +40,9 @@ defaults:
 # Common metadata shown across the site.
 author:
   name: Jacob Salomonsen
-  role: Software Engineer
+  role: Machine Learning Engineer
   tagline: Machine learning, computer vision & full-stack cloud platforms
-  location: Denmark
+  location: Denmark / Sweden
   github: jiekebo
 
 plugins:

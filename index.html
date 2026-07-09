@@ -1,6 +1,6 @@
 ---
 layout: home
-title: Jacob Salomonsen — Software Engineer
+title: Jacob Salomonsen — Machine Learning Engineer
 ---
 
 <!-- ============================ HERO ============================ -->
@@ -13,7 +13,7 @@ title: Jacob Salomonsen — Software Engineer
         I build <span class="grad">ML-powered</span> software.
       </h1>
       <p class="hero__lead">
-        Software engineer working across computer vision, applied machine
+        Machine learning engineer working across computer vision, applied machine
         learning and full-stack cloud platforms — from training segmentation
         models to shipping production apps on Kubernetes-grade cloud
         infrastructure.
@@ -26,7 +26,7 @@ title: Jacob Salomonsen — Software Engineer
 
     <div class="profile">
       <div class="profile__card">
-        <div class="profile__avatar" role="img" aria-label="Profile photo placeholder">Your photo here</div>
+        <div class="profile__avatar" role="img" aria-label="Profile photo of Jacob Salomonsen" style="background: url('{{ '/assets/profile.jpg' | relative_url }}') center/cover;"></div>
         <div class="profile__body">
           <p class="profile__name">{{ site.author.name }}</p>
           <p class="profile__role">{{ site.author.role }}</p>
@@ -80,7 +80,11 @@ title: Jacob Salomonsen — Software Engineer
     </div>
 
     <div class="projects-grid">
+    {% if site.projects %}
       {% assign projects = site.projects | sort: "order" %}
+    {% else %}
+      {% assign projects = "" | split: "" %}
+    {% endif %}
       {% for project in projects %}
       <a class="card" href="{{ project.url | relative_url }}">
         <div class="card__media">

@@ -5,7 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="theme-color" content="#0b0f14" />
     <link rel="stylesheet" href="{{ '/assets/css/style.css' | relative_url }}" />
-    {% seo %}
+    <link rel="canonical" href="{{ page.url | absolute_url }}" />
+    <meta property="og:title" content="{{ page.title | default: site.title | escape }}" />
+    <meta property="og:description" content="{{ page.description | default: site.description | escape }}" />
+    <meta property="og:type" content="website" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <!-- jekyll-seo-tag (loaded on GitHub Pages) augments the above automatically -->
   </head>
   <body>
     {% include header.html %}
