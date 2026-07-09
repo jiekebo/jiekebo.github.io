@@ -18,5 +18,35 @@
       {{ content }}
     </main>
     {% include footer.html %}
+
+    {% if content contains "mermaid" %}
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+    <script>
+      mermaid.initialize({
+        startOnLoad: true,
+        theme: "base",
+        securityLevel: "loose",
+        themeVariables: {
+          darkMode: true,
+          background: "transparent",
+          fontFamily: '"Inter","Helvetica Neue",sans-serif',
+          primaryColor: "#1b2733",
+          primaryTextColor: "#e8eef4",
+          primaryBorderColor: "#5cc8ff",
+          secondaryColor: "#16202c",
+          secondaryTextColor: "#aab8c4",
+          secondaryBorderColor: "#8b7bff",
+          tertiaryColor: "#111821",
+          lineColor: "#76859a",
+          textColor: "#e8eef4",
+          edgeLabelBackground: "#111821",
+          clusterBkg: "rgba(92,200,255,0.05)",
+          clusterBorder: "#243040",
+          nodeBorder: "#5cc8ff"
+        },
+        flowchart: { curve: "basis", padding: 16 }
+      });
+    </script>
+    {% endif %}
   </body>
 </html>

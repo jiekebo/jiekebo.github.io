@@ -44,24 +44,30 @@ The work splits into three phases:
 
 ## How the two components fit together
 
-```
-Phone camera (Shot Log app)
-        │  captured target-paper photo
-        ▼
-┌─────────────────────────┐        ┌──────────────────────────────┐
-│  SHOT LOG (product)     │        │  SHOT DETECTION (ML model)   │
-│  FastAPI + React Native │ ─────► │  ONNX instance-seg model     │
-│                         │ image  │  • target_paper (homography)  │
-│  POST /score-image      │ ─────► │  • center_ring               │
-│                         │        │  • shot (bullet impacts)     │
-│  ◄──────── impacts +    │ ─────► │                              │
-│      reference points   │ JSON   │  returns masks + boxes +     │
-│                         │        │  confidence per class        │
-│  → automatic score,     │        └──────────────────────────────┘
-│    series logged,       │
-│    stats updated         │
-└─────────────────────────┘
-```
+<div class="diagram">
+<div class="mermaid">
+flowchart LR
+  CAM(["Phone camera<br/>target-paper photo"])
+
+  subgraph product["Shot Log — product"]
+    direction TB
+    RN["React Native app<br/>Expo · Tamagui<br/>expo-camera + OpenCV warp"]
+    API["FastAPI backend<br/>clubs · events · series · shots · stats"]
+    RN -->|"capture & rectify"| API
+  end
+
+  subgraph model["Shot Detection — ML model"]
+    ONNX["ONNX instance-seg model<br/>Mask2Former / RF-DETR<br/>SAHI sliced inference"]
+  end
+
+  DB[("PostgreSQL<br/>series & statistics")]
+
+  CAM --> RN
+  API -->|"POST /score-image<br/>image"| ONNX
+  ONNX -->|"JSON: masks + boxes + scores<br/>shot · center_ring · target_paper"| API
+  API -->|"homography → ring projection<br/>automatic score"| DB
+</div>
+</div>
 
 Shot Log's backend calls the Shot Detection inference service with the
 captured image. The model returns three classes of instance masks:
@@ -119,14 +125,16 @@ The ML side is built for **accuracy first, deployment second**: train a
 strong teacher model, then distil and quantize it down to something that
 runs fast enough on-device or in the browser.
 
-<div class="arch">
-<span class="a-accent">raw image</span>
-   → <span class="a-key">SAHI-style slicing</span> (overlapping tiles, e.g. 384×384 @ 0.4 overlap)
-   → <span class="a-accent">per-tile inference</span> (Mask2Former / RF-DETR)
-   → per-class confidence maps reassembled into the full image
-   → <span class="a-key">CombineStrategy</span> stitches overlapping tile predictions
-   → <span class="a-accent">post_process_instance_segmentation</span>
-   → masks + boxes + scores for {shot, center_ring, target_paper}
+<div class="diagram">
+<div class="mermaid">
+flowchart LR
+  A["raw image"] --> B["SAHI slicing<br/>384×384 @ 0.4 overlap"]
+  B --> C["per-tile inference<br/>Mask2Former / RF-DETR"]
+  C --> D["reassemble confidence maps<br/>into full image"]
+  D --> E["CombineStrategy<br/>stitch overlapping tiles"]
+  E --> F["post-process<br/>instance segmentation"]
+  F --> G["masks + boxes + scores<br/>shot · center_ring · target_paper"]
+</div>
 </div>
 
 **Training.** Models are trained as `LightningModule`s on tiled COCO
