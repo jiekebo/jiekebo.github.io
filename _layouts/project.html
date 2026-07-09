@@ -1,0 +1,28 @@
+---
+layout: default
+---
+
+<article class="project">
+  <a href="{{ '/' | relative_url }}" class="back-link">&larr; Back to portfolio</a>
+
+  <header class="project__header">
+    <p class="project__eyebrow">{{ page.eyebrow | default: "Project" }}</p>
+    <h1 class="project__title">{{ page.title }}</h1>
+    {% if page.subtitle %}<p class="project__subtitle">{{ page.subtitle }}</p>{% endif %}
+    {% if page.tags %}
+    <ul class="project__tags">
+      {% for tag in page.tags %}<li>{{ tag }}</li>{% endfor %}
+    </ul>
+    {% endif %}
+  </header>
+
+  {% if page.cover %}
+  <figure class="project__cover">
+    <img src="{{ page.cover | relative_url }}" alt="{{ page.title }} — cover image" loading="lazy" />
+  </figure>
+  {% endif %}
+
+  <div class="project__body prose">
+    {{ content }}
+  </div>
+</article>

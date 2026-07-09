@@ -1,0 +1,139 @@
+---
+layout: home
+title: Jacob Salomonsen — Software Engineer
+---
+
+<!-- ============================ HERO ============================ -->
+<section class="hero">
+  <div class="hero__inner">
+    <div class="hero__copy">
+      <span class="hero__status">Open to building things that matter</span>
+      <h1 class="hero__title">
+        Hi, I'm Jacob.<br />
+        I build <span class="grad">ML-powered</span> software.
+      </h1>
+      <p class="hero__lead">
+        Software engineer working across computer vision, applied machine
+        learning and full-stack cloud platforms — from training segmentation
+        models to shipping production apps on Kubernetes-grade cloud
+        infrastructure.
+      </p>
+      <div class="hero__cta">
+        <a class="btn btn--primary" href="#projects">View my work</a>
+        <a class="btn btn--ghost" href="https://github.com/{{ site.author.github }}" target="_blank" rel="noopener">GitHub &rarr;</a>
+      </div>
+    </div>
+
+    <div class="profile">
+      <div class="profile__card">
+        <div class="profile__avatar" role="img" aria-label="Profile photo placeholder">Your photo here</div>
+        <div class="profile__body">
+          <p class="profile__name">{{ site.author.name }}</p>
+          <p class="profile__role">{{ site.author.role }}</p>
+          <p class="profile__meta"><span>{{ site.author.location }}</span></p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ ABOUT ============================ -->
+<section class="section section--tight" id="about">
+  <div class="container">
+    <div class="about__grid">
+      <div class="about__text">
+        <p class="section__eyebrow">About</p>
+        <h2 class="section__title">Engineer, builder, lifelong learner.</h2>
+        <p>
+          I like taking hard problems end-to-end: labelling a dataset,
+          training and distilling a model, exporting it to ONNX, and wiring it
+          into a real product with an auth system, a database and a CI/CD
+          pipeline that ships to the cloud on every push.
+        </p>
+        <p>
+          My recent work fuses deep learning (instance segmentation, model
+          distillation and quantization) with a production FastAPI + React
+          Native stack, deployed on DigitalOcean with Terraform and GitHub
+          Actions.
+        </p>
+      </div>
+      <div class="stats">
+        <div class="stat"><div class="stat__num">1</div><p class="stat__label">End-to-end ML product</p></div>
+        <div class="stat"><div class="stat__num">3</div><p class="stat__label">Segmentation model families trained</p></div>
+        <div class="stat"><div class="stat__num">12</div><p class="stat__label">App locales shipped</p></div>
+        <div class="stat"><div class="stat__num">100%</div><p class="stat__label">Infrastructure as code</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ PROJECTS ============================ -->
+<section class="section" id="projects">
+  <div class="container">
+    <div class="section__head">
+      <p class="section__eyebrow">Projects</p>
+      <h2 class="section__title">Things I'm building.</h2>
+      <p class="section__lead">
+        A selection of personal projects. Each card links to a deeper
+        write-up with architecture and the technologies behind it.
+      </p>
+    </div>
+
+    <div class="projects-grid">
+      {% assign projects = site.projects | sort: "order" %}
+      {% for project in projects %}
+      <a class="card" href="{{ project.url | relative_url }}">
+        <div class="card__media">
+          {% if project.cover %}
+          <img src="{{ project.cover | relative_url }}" alt="{{ project.title }}" loading="lazy" />
+          {% else %}
+          <div class="card__media card__media--placeholder">Illustration</div>
+          {% endif %}
+        </div>
+        <div class="card__body">
+          <span class="card__tag">{{ project.eyebrow | default: "Project" }}</span>
+          <h3 class="card__title">{{ project.title }}</h3>
+          <p class="card__desc">{{ project.summary }}</p>
+          {% if project.stack %}
+          <div class="card__stack">
+            {% for t in project.stack limit: 4 %}<span class="chip">{{ t }}</span>{% endfor %}
+            {% if project.stack.size > 4 %}<span class="chip">+{{ project.stack.size | minus: 4 }}</span>{% endif %}
+          </div>
+          {% endif %}
+          <span class="card__link">Read the write-up &rarr;</span>
+        </div>
+      </a>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<!-- ============================ ACHIEVEMENTS ============================ -->
+<section class="section section--tight" id="achievements">
+  <div class="container">
+    <div class="section__head">
+      <p class="section__eyebrow">Career</p>
+      <h2 class="section__title">Achievements &amp; milestones.</h2>
+      <p class="section__lead">
+        Highlights from my professional journey so far.
+      </p>
+    </div>
+
+    <div class="timeline">
+      <div class="timeline__item">
+        <div class="timeline__when">Placeholder</div>
+        <h3 class="timeline__title">Your achievement here</h3>
+        <p class="timeline__desc">Replace this entry with a real career milestone, role, or outcome.</p>
+      </div>
+      <div class="timeline__item">
+        <div class="timeline__when">Placeholder</div>
+        <h3 class="timeline__title">Your achievement here</h3>
+        <p class="timeline__desc">Replace this entry with a real career milestone, role, or outcome.</p>
+      </div>
+    </div>
+    <p class="placeholder-note">
+      This section is a placeholder. Add your real achievements, roles and dates
+      in <code>index.html</code> under the <em>Achievements</em> section.
+    </p>
+  </div>
+</section>

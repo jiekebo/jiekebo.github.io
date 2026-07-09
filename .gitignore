@@ -1,0 +1,14 @@
+# Large source originals (optimized copies live in assets/)
+/shot_log/
+
+# Jekyll / Ruby
+_site/
+.jekyll-cache/
+.jekyll-metadata
+Gemfile.lock
+vendor/
+
+# OS / editor
+.DS_Store
+Thumbs.db
+*.swp

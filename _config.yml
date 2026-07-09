@@ -1,3 +1,50 @@
-theme: jekyll-theme-minimal
-title: Jacob's Portfolio
-description: Bookmark this to keep an eye on my project updates!
+title: Jacob Salomonsen
+description: >-
+  Jacob Salomonsen's portfolio — software engineer building ML-powered
+  applications, from computer vision on the edge to full-stack cloud platforms.
+url: "https://jiekebo.github.io"
+baseurl: ""
+
+# Use custom layouts instead of a gem-based theme.
+theme: null
+markdown: kramdown
+highlighter: rouge
+kramdown:
+  input: GFM
+  syntax_highlighter: rouge
+
+permalink: pretty
+
+sass:
+  style: compressed
+
+# A collection of project write-ups. Each file in _projects/ becomes a page at
+# /projects/<slug>/.
+collections:
+  projects:
+    output: true
+    permalink: /projects/:path/
+
+defaults:
+  - scope:
+      path: ""
+      type: projects
+    values:
+      layout: project
+  - scope:
+      path: ""
+      type: pages
+    values:
+      layout: default
+
+# Common metadata shown across the site.
+author:
+  name: Jacob Salomonsen
+  role: Software Engineer
+  tagline: Machine learning, computer vision & full-stack cloud platforms
+  location: Denmark
+  github: jiekebo
+
+plugins:
+  - jekyll-seo-tag
+  - jekyll-sitemap
