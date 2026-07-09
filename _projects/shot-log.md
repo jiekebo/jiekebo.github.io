@@ -42,6 +42,78 @@ The work splits into three phases:
 3. **Score** — detect the scoring rings and assign each shot a value, with
    edge cases (a shot landing exactly on a ring boundary) handled precisely.
 
+## System architecture
+
+The whole product spans an edge app, a cloud backend, an ML inference
+service and the supporting cloud infrastructure. The diagram shows the full
+request path — from a shooter capturing a target on their phone, through the
+React Native app and Caddy edge, into the FastAPI backend (where scoring,
+club management and witnessing live), out to the Shot Detection ONNX model,
+and back as an automatic score persisted in PostgreSQL — alongside the
+delivery pipeline and the external services (object storage, email, the
+postal/police licensing flow).
+
+<div class="diagram">
+<div class="mermaid">
+flowchart TD
+  subgraph client["Client"]
+    PHONE["Shooter phone<br/>Expo / React Native<br/>expo-camera + OpenCV warp"]
+    CLUB["Club admin<br/>web dashboard"]
+  end
+
+  subgraph edge["Edge"]
+    CADDY["Caddy<br/>auto-TLS · HTTP/3<br/>reverse proxy"]
+  end
+
+  subgraph be["FastAPI backend · Droplet"]
+    AUTH["Auth · OAuth2 JWT<br/>roles: admin > moderator > member"]
+    DOMAIN["Domain layer<br/>clubs · events · series · shots<br/>weapons · witnesses · awards · stats"]
+    SCORE["Scoring flow<br/>homography → ring projection"]
+    RATE["SlowAPI rate limiting"]
+  end
+
+  subgraph ml["Shot Detection · inference"]
+    ONNX["ONNX instance-seg model<br/>SAHI sliced inference<br/>shot · center_ring · target_paper"]
+    WEB["onnxruntime-web (WASM)<br/>runs in the phone browser"]
+  end
+
+  PG[("PostgreSQL 16<br/>managed · private VPC")]
+  S3[("Spaces / S3<br/>target images")]
+  MAIL["Resend / AWS SES<br/>transactional email"]
+
+  PHONE -->|"capture & rectify"| CADDY
+  CLUB --> CADDY
+  CADDY -->|"/api/* · /uploads/*"| be
+  CADDY -->|"static SPA"| PHONE
+  CADDY -->|"static SPA"| CLUB
+
+  RATE --> be
+  be --> AUTH
+  AUTH --> DOMAIN
+  DOMAIN -->|"POST /score-image<br/>image"| ONNX
+  ONNX -->|"JSON: masks + boxes<br/>+ reference points"| DOMAIN
+  DOMAIN --> SCORE
+  SCORE --> PG
+  DOMAIN --> PG
+  DOMAIN -->|"presigned URLs"| S3
+  DOMAIN -->|"invite / witness / bounce"| MAIL
+
+  PHONE -.->|"optional: on-device<br/>inference (no round-trip)"| WEB
+
+  PHONE -->|"witness gold-level series<br/>(activity proof)"| CLUB
+  CLUB -.->|"member activity record<br/>→ police license recommendation"| POLICE["Police licensing authority"]
+
+  subgraph cicd["CI/CD"]
+    GH["GitHub · push to master"]
+    GHA["GitHub Actions"]
+    GHCR["ghcr.io<br/>backend + frontend images"]
+  end
+  GH --> GHA
+  GHA --> GHCR
+  GHCR -->|"SSH · docker compose pull"| be
+</div>
+</div>
+
 ## How the two components fit together
 
 <div class="diagram">
@@ -207,6 +279,25 @@ TypeScript codebase with Expo Router file-based routing.
 - **Internationalisation:** a custom i18n store with 12 locales.
 - **Native build:** a custom Expo dev build is required (not Expo Go) because
   of the native OpenCV module.
+
+The app serves three distinct user journeys: individual shooters scoring
+targets and tracking progress, club admins managing member activity, and a
+club-witnessing workflow that feeds the police firearm-licensing process.
+
+<div class="pipeline pipeline--screens">
+  <figure>
+    <img src="{{ '/assets/projects/shot-log/series_details.png' | relative_url }}" alt="Shot Log series detail screen showing an uploaded target and the automatic score returned by the system" loading="lazy" />
+    <figcaption>Series detail — upload a target photo and get the automatic score back, logged against the series.</figcaption>
+  </figure>
+  <figure>
+    <img src="{{ '/assets/projects/shot-log/statistics.png' | relative_url }}" alt="Shot Log statistics screen showing a shooter's progress over time" loading="lazy" />
+    <figcaption>Statistics — a shooter tracks their progress over time across events and series.</figcaption>
+  </figure>
+  <figure>
+    <img src="{{ '/assets/projects/shot-log/club_activity.png' | relative_url }}" alt="Shot Log club activity screen showing member activity overview for club management" loading="lazy" />
+    <figcaption>Club activity — admins overview member activity and witness gold-level series, feeding the police firearm-licence recommendation.</figcaption>
+  </figure>
+</div>
 
 ### 4. Cloud deployment
 

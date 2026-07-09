@@ -451,6 +451,9 @@ img { max-width: 100%; display: block; }
 .pipeline figcaption { text-align: center; color: var(--text-muted); font-size: 0.82rem; margin-top: 0.5rem; }
 @media (max-width: 720px) { .pipeline { grid-template-columns: 1fr; } }
 
+/* Screenshot strip — preserve full UI without cropping */
+.pipeline--screens img { object-fit: contain; height: auto; max-height: 520px; background: var(--bg); }
+
 /* Tech grid */
 .tech-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1rem; margin: 1.5rem 0 0; }
 .tech {
