@@ -11,6 +11,7 @@ summary: >-
   app deployed on DigitalOcean.
 order: 1
 cover: /assets/projects/shot-log/3_detection.jpg
+demo_url: https://shotlog.nordlytics.se
 tags: [PyTorch, ONNX, FastAPI, React Native, Terraform, DigitalOcean, Computer Vision]
 stack: [PyTorch, Mask2Former, ONNX, FastAPI, React Native, Terraform, Caddy]
 ---
@@ -398,12 +399,15 @@ from SSM Parameter Store — all Terraform-managed.
 </div>
 
 <div class="callout">
-  <p>
-    <strong>Status:</strong> the Shot Detection model trains and infers
-    end-to-end (ONNX export, quantization and a browser webapp are all
-    working), and Shot Log is a deployed, multi-tenant product. The final
-    API wiring that returns automatic scores from the model into Shot Log's
-    series is the active integration work — the architecture above describes
-    how the two are designed to chain together.
-  </p>
+  <div>
+    <p>
+      <strong>Status:</strong> the Shot Detection model trains and infers
+      end-to-end (ONNX export, quantization and a browser webapp are all
+      working), and Shot Log is a deployed, multi-tenant product. The final
+      API wiring that returns automatic scores from the model into Shot Log's
+      series is the active integration work — the architecture above describes
+      how the two are designed to chain together.
+    </p>
+    <a class="btn btn--primary" href="https://shotlog.nordlytics.se" target="_blank" rel="noopener" style="margin-top:0.8rem;">Open the Shot Log app &rarr;</a>
+  </div>
 </div>
